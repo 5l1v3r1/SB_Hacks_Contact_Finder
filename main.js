@@ -8,27 +8,30 @@ window.onload = function() {
     var email = document.getElementById('cname').value.toLowerCase().replace(/ /g,'');
     if (firstname.length > 0 && lastname.length > 0 && email.length > 0) {
       console.log(firstname + " " + lastname + " " + email);
-      var result = document.getElementById('emails');
-      result.textContent = "";
-      result.textContent += (firstname + '@' + email + ',\n');
-      result.textContent += (firstname + '.' + lastname + '@' + email + ',\n');
-      result.textContent += (firstname.charAt(0) + lastname + '@' + email+ ',\n');
-      result.textContent += (firstname + lastname + '@' + email+ ',\n');
-      result.textContent += (firstname + '.' + lastname.charAt(0) + '@' + email+ '\n');
-      result.textContent += (firstname.charAt(0) + '.' + lastname.charAt(0) + '@' + email+ ',\n');
-      result.textContent += (lastname + '@' + email+ ',\n');
-      result.textContent += (firstname.charAt(0) + '.' + lastname + '@' + email+ ',\n');
-      result.textContent += (firstname + lastname.charAt(0) + '@' + email+ ',\n');
-      result.textContent += (firstname + '_' + lastname + '@' + email+ ',\n');
-      
+      var resultElement = document.getElementById('emails');
+      resultString = ""
+      resultString += (firstname + '@' + email + ',\n');
+      resultString += (firstname + '.' + lastname + '@' + email + ',\n');
+      resultString += (firstname.charAt(0) + lastname + '@' + email+ ',\n');
+      resultString += (firstname + lastname + '@' + email+ ',\n');
+      resultString += (firstname + '.' + lastname.charAt(0) + '@' + email+ '\n');
+      resultString += (firstname.charAt(0) + '.' + lastname.charAt(0) + '@' + email+ ',\n');
+      resultString += (lastname + '@' + email+ ',\n');
+      resultString += (firstname.charAt(0) + '.' + lastname + '@' + email+ ',\n');
+      resultString += (firstname + lastname.charAt(0) + '@' + email+ ',\n');
+      resultString += (firstname + '_' + lastname + '@' + email+ ',\n');
+      resultElement.textContent = resultString;
       // copyDiv to Clipboard
       var range = document.getSelection().getRangeAt(0);
       range.selectNode(document.getElementById('emails'));
       window.getSelection().addRange(range);
       document.execCommand("copy");
       console.log("Text properly copied");
-      injectScript();
+      clickCompose();
       window.close();
+      chrome.runtime.sendMessage(resultString);
+      // injectTo(resultString);
+
     }
   } document.getElementById('generate-emails').onclick = generateEmails;
   
@@ -53,14 +56,27 @@ window.onload = function() {
   }
   
   // Injects the script for clicking the 'Compose' button in Gmail
-  function injectScript() {
+  function clickCompose() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         // query the active tab, which will be only one tab
         //and inject the script in it
-        chrome.tabs.executeScript(tabs[0].id, {file: "inject_emails.js"});
+        chrome.tabs.executeScript(tabs[0].id, {file: "press_compose.js"});
     });
   }
+  
+  // Super janky. TODO: Ask Danny for better solution. This one is terrible.
+  // 'Polling' until it eventually gets the To: field in focus
+  // function injectTo(resultString) {
+  //   for (i = 0; i < 500; i++) {
+  //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  //         // query the active tab, which will be only one tab
+  //         //and inject the script in it
+  //         chrome.tabs.executeScript(tabs[0].id, {file: "inject_to.js"});
+  //     });
+  //   }
+  //   chrome.runtime.sendMessage(resultString);
+  // }
+  
 };
-
 
 
