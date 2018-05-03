@@ -1,4 +1,4 @@
-window.onload = function(){ 
+window.onload = function() { 
   // Puts all emails inside a div, copies it to user's clipboard, opens a new
   // email by clicking compose
   // TODO: Put emails in to field
@@ -6,7 +6,7 @@ window.onload = function(){
     var firstname = document.getElementById('fname').value.toLowerCase().replace(/ /g,'');
     var lastname = document.getElementById('lname').value.toLowerCase().replace(/ /g,'');
     var email = document.getElementById('cname').value.toLowerCase().replace(/ /g,'');
-    if (firstname.length != 0 && lastname.length !=0 && email.length != 0) {
+    if (firstname.length > 0 && lastname.length > 0 && email.length > 0) {
       console.log(firstname + " " + lastname + " " + email);
       var result = document.getElementById('emails');
       result.textContent = "";
@@ -21,12 +21,19 @@ window.onload = function(){
       result.textContent += (firstname + lastname.charAt(0) + '@' + email+ ',\n');
       result.textContent += (firstname + '_' + lastname + '@' + email+ ',\n');
       
+      // copyDiv to Clipboard
       var range = document.getSelection().getRangeAt(0);
       range.selectNode(document.getElementById('emails'));
       window.getSelection().addRange(range);
       document.execCommand("copy");
-      
-      injectTheScript();
+      console.log("Text properly copied");
+      console.log("Script being run");
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          // query the active tab, which will be only one tab
+          //and inject the script in it
+          chrome.tabs.executeScript(tabs[0].id, {file: "inject_emails.js"});
+      });
+      window.close();
     }
   } document.getElementById('generate-emails').onclick = generateEmails;
   
@@ -42,19 +49,12 @@ window.onload = function(){
   // Lets your press enter on the company name and generate it without the click
   document.getElementById('cname').onkeypress = function(e) {
     var keyCode = e.keyCode || e.which;
-    if (keyCode == '13'){
+    var firstname = document.getElementById('fname').value.toLowerCase().replace(/ /g,'');
+    var lastname = document.getElementById('lname').value.toLowerCase().replace(/ /g,'');
+    var email = document.getElementById('cname').value.toLowerCase().replace(/ /g,'');
+    if (keyCode == '13' && firstname.length > 0 && lastname.length > 0 && email.length > 0) {
       generateEmails();
-      return false;
     }
   }
-  
-  // Inject the compose_script into the main page in the hopes of it actually
-  // hitting the compose button...
-  function injectTheScript() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        // query the active tab, which will be only one tab
-        //and inject the script in it
-        chrome.tabs.executeScript(tabs[0].id, {file: "inject_emails.js"});
-    });
-  }
 };
+
