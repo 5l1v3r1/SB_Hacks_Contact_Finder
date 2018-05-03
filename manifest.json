@@ -9,7 +9,7 @@
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
-      "js" : ["inject_emails.js"]
+      "js" : ["main.js"]
     }
   ],
   "page_action": {
@@ -18,7 +18,8 @@
   },
   "permissions": [
     "declarativeContent",
-    "activeTab"
+    "activeTab",
+    "tabs", "http://*/*", "https://*/*"
   ],
   "icons": { 
     "128" : "images/icon.png" 

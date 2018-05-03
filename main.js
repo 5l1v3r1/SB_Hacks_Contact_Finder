@@ -27,12 +27,7 @@ window.onload = function() {
       window.getSelection().addRange(range);
       document.execCommand("copy");
       console.log("Text properly copied");
-      console.log("Script being run");
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          // query the active tab, which will be only one tab
-          //and inject the script in it
-          chrome.tabs.executeScript(tabs[0].id, {file: "inject_emails.js"});
-      });
+      injectScript();
       window.close();
     }
   } document.getElementById('generate-emails').onclick = generateEmails;
@@ -56,5 +51,16 @@ window.onload = function() {
       generateEmails();
     }
   }
+  
+  // Injects the script for clicking the 'Compose' button in Gmail
+  function injectScript() {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        // query the active tab, which will be only one tab
+        //and inject the script in it
+        chrome.tabs.executeScript(tabs[0].id, {file: "inject_emails.js"});
+    });
+  }
 };
+
+
 
