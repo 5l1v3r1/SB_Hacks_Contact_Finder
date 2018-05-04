@@ -1,7 +1,7 @@
 function inject_to() {
   var toField = document.activeElement;
   console.log(toField);
-  toField.value = "Hello?";
+  toField.value = emailString;
 }
 
 inject_to();

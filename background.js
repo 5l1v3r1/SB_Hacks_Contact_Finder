@@ -20,10 +20,16 @@ chrome.runtime.onInstalled.addListener(function() {
 // Background message that will contain all the emails and send the data to the
 // inject_to script
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
-  alert(response);
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      // query the active tab, which will be only one tab
-      //and inject the script in it
-      chrome.tabs.executeScript(tabs[0].id, {file: "inject_to.js"});
+    // query the active tab, which will be only one tab
+    //and inject the script in it
+    var emailString = response;
+    for (i = 0; i < 50; i++) {
+      chrome.tabs.executeScript(tabs[0].id, {
+          code: 'var emailString = ' + JSON.stringify(response)
+      }, function() {
+          chrome.tabs.executeScript(tabs[0].id, {file: 'inject_to.js'});
+      });
+    }
   });
 });

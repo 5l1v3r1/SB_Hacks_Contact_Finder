@@ -1,7 +1,7 @@
 window.onload = function() { 
-  // Puts all emails inside a div, copies it to user's clipboard, opens a new
-  // email by clicking compose
-  // TODO: Put emails in to field
+  
+  // Puts results into a result div if if button clicked. Result pushed into
+  // a new composed draft with potential emails in to field
   function generateEmails() {
     var firstname = document.getElementById('fname').value.toLowerCase().replace(/ /g,'');
     var lastname = document.getElementById('lname').value.toLowerCase().replace(/ /g,'');
@@ -21,16 +21,9 @@ window.onload = function() {
       resultString += (firstname + lastname.charAt(0) + '@' + email+ ',\n');
       resultString += (firstname + '_' + lastname + '@' + email+ ',\n');
       resultElement.textContent = resultString;
-      // copyDiv to Clipboard
-      var range = document.getSelection().getRangeAt(0);
-      range.selectNode(document.getElementById('emails'));
-      window.getSelection().addRange(range);
-      document.execCommand("copy");
-      console.log("Text properly copied");
       clickCompose();
       window.close();
       chrome.runtime.sendMessage(resultString);
-      // injectTo(resultString);
 
     }
   } document.getElementById('generate-emails').onclick = generateEmails;
@@ -63,19 +56,6 @@ window.onload = function() {
         chrome.tabs.executeScript(tabs[0].id, {file: "press_compose.js"});
     });
   }
-  
-  // Super janky. TODO: Ask Danny for better solution. This one is terrible.
-  // 'Polling' until it eventually gets the To: field in focus
-  // function injectTo(resultString) {
-  //   for (i = 0; i < 500; i++) {
-  //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //         // query the active tab, which will be only one tab
-  //         //and inject the script in it
-  //         chrome.tabs.executeScript(tabs[0].id, {file: "inject_to.js"});
-  //     });
-  //   }
-  //   chrome.runtime.sendMessage(resultString);
-  // }
   
 };
 

@@ -1,7 +1,8 @@
 {
   "name": "SB Hacks Contact Finder",
-  "version": "2.0.0",
+  "version": "1.0.1",
   "description": "Find contacs with ease",
+  "options_page": "about.html",
   "background": {
     "scripts": ["background.js"],
     "persistent": false
@@ -13,7 +14,7 @@
     }
   ],
   "page_action": {
-    "default_icon": "images/icon.png",
+    "default_icon": "images/icon-128.png",
     "default_popup": "sponsors.html"
   },
   "permissions": [
@@ -22,7 +23,9 @@
     "tabs", "http://*/*", "https://*/*"
   ],
   "icons": { 
-    "128" : "images/icon.png" 
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png" 
   },
   "manifest_version": 2
 }
