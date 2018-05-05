@@ -20,5 +20,5 @@ chrome://extensions/
 
 ## Acknowledgments
 
-* Shreyas for coming up with the Java file that inpired this
+* Shreyas for coming up with the Java file that inspired this
 * Anna <sup>2</sup> for being real MVP's
